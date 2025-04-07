@@ -22,36 +22,33 @@ jobs:
         run: |
           echo "Installing dependencies..."
           sudo apt update
-          sudo apt install -y build-essential ccache git zip unzip openjdk-11-jdk python3-pip python3-setuptools libncurses5 libstdc++6 android-sdk android-ndk
+          sudo apt install -y build-essential ccache git zip unzip openjdk-11-jdk python3-pip python3-setuptools libncurses5 libstdc++6
+          sudo apt install -y android-sdk android-ndk
           pip install --upgrade pip
           pip install buildozer
-          
+          buildozer --version  # للتحقق من النسخة المثبتة
+
       - name: Check Java version
-        run: java -version  # للتأكد من أن Java مثبتة بشكل صحيح
+        run: java -version  # للتأكد من أن Java مثبتة
 
       - name: Check Android SDK installation
-        run: sdkmanager --list  # للتحقق من تثبيت Android SDK
-
-      - name: Check buildozer version
-        run: buildozer --version  # للتحقق من أن Buildozer يعمل بشكل صحيح
+        run: sdkmanager --list  # للتحقق من أن Android SDK تم تثبيته بشكل صحيح
 
       - name: Create buildozer.spec if not exists
         run: |
           if [ ! -f buildozer.spec ]; then buildozer init; fi
 
-      - name: Start APK build
+      - name: Build APK (without debug)
         run: |
-          echo "Starting APK build process"
-          buildozer android debug  # لتشغيل عملية البناء
+          buildozer android release  # حاول البناء بشكل release بدلاً من debug
 
-      - name: Check if APK file exists
+      - name: Check APK file existence
         run: |
           echo "Checking for APK files in bin/"
           ls -lh bin/  # تحقق من وجود ملفات الـ APK في مجلد bin/
 
       - name: Prepare APK for upload
         run: |
-          echo "Preparing APK for upload"
           mkdir -p artifact
           cp bin/*.apk artifact/
           ls -lh artifact/
