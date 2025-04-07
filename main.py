@@ -11,6 +11,7 @@ from kivy.uix.modalview import ModalView
 from kivy.graphics import Color, Rectangle
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+import git
 
 # إضافة دول جديدة للأعلام
 FLAGS_DATA = {
@@ -32,33 +33,32 @@ FLAGS_DATA = {
     "Turkey": "https://flagcdn.com/w320/tr.png",
     "Saudi Arabia": "https://flagcdn.com/w320/sa.png",
     "Greece": "https://flagcdn.com/w320/gr.png",
-    "United States": "https://flagcdn.com/w320/us.png",  # إضافة الولايات المتحدة
-    "South Korea": "https://flagcdn.com/w320/kr.png",  # إضافة كوريا الجنوبية
-    "Nigeria": "https://flagcdn.com/w320/ng.png",  # إضافة نيجيريا
-    "Pakistan": "https://flagcdn.com/w320/pk.png",  # إضافة باكستان
-    "Thailand": "https://flagcdn.com/w320/th.png",  # إضافة تايلاند
-    "Sweden": "https://flagcdn.com/w320/se.png",  # إضافة السويد
-    "Norway": "https://flagcdn.com/w320/no.png",  # إضافة النرويج
-    "Denmark": "https://flagcdn.com/w320/dk.png",  # إضافة الدنمارك
-     "United Arab Emirates": "https://flagcdn.com/w320/ae.png",  # الإمارات العربية المتحدة
-    "Jordan": "https://flagcdn.com/w320/jo.png",  # الأردن
-    "Kuwait": "https://flagcdn.com/w320/kw.png",  # الكويت
-    "Lebanon": "https://flagcdn.com/w320/lb.png",  # لبنان
-    "Syria": "https://flagcdn.com/w320/sy.png",  # سوريا
-    "Iraq": "https://flagcdn.com/w320/iq.png",  # العراق
-    "Oman": "https://flagcdn.com/w320/om.png",  # عمان
-    "Palestine": "https://flagcdn.com/w320/ps.png",  # فلسطين
-    "Qatar": "https://flagcdn.com/w320/qa.png",  # قطر
-    "Bahrain": "https://flagcdn.com/w320/bh.png",  # البحرين
-    "Yemen": "https://flagcdn.com/w320/ye.png",  # اليمن
-    "Morocco": "https://flagcdn.com/w320/ma.png",  # المغرب
-    "Tunisia": "https://flagcdn.com/w320/tn.png",  # تونس
-    "Algeria": "https://flagcdn.com/w320/dz.png",  # الجزائر
-    "Libya": "https://flagcdn.com/w320/ly.png",  # ليبيا
-    "Sudan": "https://flagcdn.com/w320/sd.png",  # السودان
-    "Mauritania": "https://flagcdn.com/w320/mr.png",  # موريتانيا
-    "Somalia": "https://flagcdn.com/w320/so.png"  # الصومال
-    
+    "United States": "https://flagcdn.com/w320/us.png",
+    "South Korea": "https://flagcdn.com/w320/kr.png",
+    "Nigeria": "https://flagcdn.com/w320/ng.png",
+    "Pakistan": "https://flagcdn.com/w320/pk.png",
+    "Thailand": "https://flagcdn.com/w320/th.png",
+    "Sweden": "https://flagcdn.com/w320/se.png",
+    "Norway": "https://flagcdn.com/w320/no.png",
+    "Denmark": "https://flagcdn.com/w320/dk.png",
+    "United Arab Emirates": "https://flagcdn.com/w320/ae.png",
+    "Jordan": "https://flagcdn.com/w320/jo.png",
+    "Kuwait": "https://flagcdn.com/w320/kw.png",
+    "Lebanon": "https://flagcdn.com/w320/lb.png",
+    "Syria": "https://flagcdn.com/w320/sy.png",
+    "Iraq": "https://flagcdn.com/w320/iq.png",
+    "Oman": "https://flagcdn.com/w320/om.png",
+    "Palestine": "https://flagcdn.com/w320/ps.png",
+    "Qatar": "https://flagcdn.com/w320/qa.png",
+    "Bahrain": "https://flagcdn.com/w320/bh.png",
+    "Yemen": "https://flagcdn.com/w320/ye.png",
+    "Morocco": "https://flagcdn.com/w320/ma.png",
+    "Tunisia": "https://flagcdn.com/w320/tn.png",
+    "Algeria": "https://flagcdn.com/w320/dz.png",
+    "Libya": "https://flagcdn.com/w320/ly.png",
+    "Sudan": "https://flagcdn.com/w320/sd.png",
+    "Mauritania": "https://flagcdn.com/w320/mr.png",
+    "Somalia": "https://flagcdn.com/w320/so.png"
 }
 
 if not os.path.exists("flags"):
@@ -82,6 +82,9 @@ class StartScreen(Screen):
 
         title = Label(text="🌍 Guess The Flag 🌍", font_size=36, size_hint=(1, 0.3), color=(1, 1, 1, 1))
         layout.add_widget(title)
+        
+        powered_by_label = Label(text="Powered by: Ibrahim Zaid", font_size=18, size_hint=(1, 0.1), color=(1, 1, 1, 1))
+        layout.add_widget(powered_by_label)
 
         btn_timer = Button(text="Play with Timer", font_size=24, size_hint=(1, 0.2), background_normal='', background_color=(0.2, 0.6, 0.8, 1), border=(10, 10, 10, 10))
         btn_timer.bind(on_press=self.start_with_timer)
@@ -228,62 +231,66 @@ class GameScreen(Screen):
         self.buttons = []
         for option in options:
             button = Button(text=option, size_hint=(1, None), height=70, font_size=18,
-                            background_normal='', background_color=(0.4, 0.8, 1, 1), color=(1, 1, 1, 1), border=(10, 10, 10, 10))
+                            background_normal='', background_color=(0.4, 0.6, 0.4, 1))
             button.bind(on_press=self.check_answer)
             self.buttons_layout.add_widget(button)
             self.buttons.append(button)
 
         if self.play_with_timer:
-            self.time_left = 5
+            self.time_left = 30
             self.timer_label.text = f"⏰ Time Left: {self.time_left}s"
             self.timer_event = Clock.schedule_interval(self.update_timer, 1)
-        else:
-            self.timer_label.text = ""
 
     def check_answer(self, instance):
-        selected_country = instance.text
-        if selected_country == self.correct_country:
-            self.score += 1
-            instance.background_color = (0, 0.7, 0, 1)  # الإجابة الصحيحة تصبح خضراء
+        if instance.text == self.correct_country:
+            self.score += 10
+            self.update_score()
+            self.generate_question()
         else:
-            instance.background_color = (0.8, 0, 0, 1)  # الإجابة الخاطئة تصبح حمراء
-
-        self.update_score()
-        self.disable_buttons()
-
-        # الانتقال إلى السؤال التالي بشكل تلقائي بعد إجابة اللاعب
-        Clock.schedule_once(lambda dt: self.generate_question(), 1)
-
-    def disable_buttons(self):
-        for button in self.buttons:
-            button.disabled = True
+            self.show_popup("Game Over", f"Incorrect! The correct answer was: {self.correct_country}")
+            self.disable_buttons()
+            Clock.schedule_once(self.goto_start_screen, 2)
 
     def update_score(self):
         self.score_label.text = f"Score: {self.score}"
 
     def show_popup(self, title, message):
-        popup = ModalView(size_hint=(0.8, 0.4), background_color=(0, 0, 0, 0.8))
-        box = BoxLayout(orientation='vertical', spacing=10, padding=20)
-        box.add_widget(Label(text=title, font_size=28, color=(1, 0.8, 0.2, 1)))
-        box.add_widget(Label(text=message, font_size=20, color=(1, 1, 1, 1)))
-        popup.add_widget(box)
-        popup.auto_dismiss = True
+        popup = ModalView(size_hint=(None, None), size=(400, 400))
+        content = BoxLayout(orientation='vertical', spacing=10)
+        title_label = Label(text=title, font_size=30, size_hint=(1, 0.2))
+        message_label = Label(text=message, font_size=20, size_hint=(1, 0.7))
+        close_button = Button(text="Close", size_hint=(1, 0.2))
+        close_button.bind(on_press=popup.dismiss)
+
+        content.add_widget(title_label)
+        content.add_widget(message_label)
+        content.add_widget(close_button)
+        popup.add_widget(content)
         popup.open()
+
+    def disable_buttons(self):
+        for button in self.buttons:
+            button.disabled = True
+
+    def back_to_start(self, instance):
+        self.manager.current = "start"
 
     def exit_game(self, instance):
         App.get_running_app().stop()
 
-    def back_to_start(self, instance):
-        self.manager.current = "start"  # التبديل إلى الشاشة الرئيسية
 
-
-class GuessTheFlagApp(App):
+class FlagQuizApp(App):
     def build(self):
-        self.manager = ScreenManager(transition=FadeTransition())
-        self.manager.add_widget(StartScreen(name="start"))
-        self.manager.add_widget(GameScreen(name="game"))
-        return self.manager
+        sm = ScreenManager(transition=FadeTransition())
+        sm.add_widget(StartScreen(name="start"))
+        sm.add_widget(GameScreen(name="game"))
+        return sm
 
 
-if __name__ == "__main__":
-    GuessTheFlagApp().run()
+if __name__ == '__main__':
+    # ربط اللعبة بمستودع GitHub
+    repo = git.Repo('.')  # تحديد مستودع Git
+    origin = repo.remotes.origin  # الوصول إلى المستودع البعيد
+    origin.pull()  # سحب آخر التحديثات من المستودع البعيد
+
+    FlagQuizApp().run()
