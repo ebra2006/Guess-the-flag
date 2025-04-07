@@ -39,8 +39,12 @@ jobs:
           cp bin/*.apk artifact/
           tar -czf artifact.tar.gz -C artifact .
 
+      - name: Check if APK exists
+        run: |
+          ls -lh artifact/ # تأكد من أن الملف موجود في المجلد artifact
+
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: guess-the-flag-apk
           path: artifact.tar.gz
