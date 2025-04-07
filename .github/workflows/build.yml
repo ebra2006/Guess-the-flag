@@ -20,24 +20,33 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "Installing necessary dependencies..."
           sudo apt update
           sudo apt install -y build-essential ccache git zip unzip openjdk-11-jdk python3-pip python3-setuptools libncurses5 libstdc++6 android-sdk android-ndk
           pip install --upgrade pip
           pip install buildozer
+          buildozer --version  # تحقق من النسخة المثبتة من buildozer
+
+      - name: Check if Java is installed
+        run: |
+          java -version  # تحقق من أن Java مثبتة بشكل صحيح
+
+      - name: Check if Android SDK is installed
+        run: |
+          sdkmanager --list  # تحقق من أن Android SDK مثبت وجاهز للاستخدام
+
+      - name: Check buildozer version
+        run: |
+          buildozer --version  # تحقق من أن buildozer مثبت بشكل صحيح
 
       - name: Create buildozer.spec if not exists
         run: |
           if [ ! -f buildozer.spec ]; then buildozer init; fi
 
-      - name: Check buildozer version
+      - name: Build APK (with verbose output)
         run: |
-          buildozer --version  # تحقق من أن buildozer يعمل بشكل صحيح
-
-      - name: Build APK
-        run: |
-          echo "Building APK using Buildozer"
-          buildozer android debug -v  # إضافة -v لعرض تفاصيل البناء
-        continue-on-error: true # التأكد من أن العمل يستمر حتى لو حدث خطأ
+          echo "Starting APK build..."
+          buildozer android debug -v  # وضع verbose للحصول على تفاصيل كاملة
 
       - name: Check APK file existence
         run: |
