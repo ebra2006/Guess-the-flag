@@ -27,8 +27,11 @@ jobs:
         run: |
           buildozer android debug
 
-      -- name: Upload APK
-  uses: actions/upload-artifact@v3
+ - name: Upload APK
+  run: |
+    mkdir -p artifact
+    cp bin/*.apk artifact/
+- uses: actions/upload-artifact@v2
   with:
     name: guess-the-flag-apk
-    path: bin/*.apk
+    path: artifact/
