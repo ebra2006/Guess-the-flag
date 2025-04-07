@@ -8,10 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Setup Python
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -23,15 +25,22 @@ jobs:
           pip install --upgrade pip
           pip install buildozer
 
+      - name: Create buildozer.spec if not exists
+        run: |
+          if [ ! -f buildozer.spec ]; then buildozer init; fi
+
       - name: Build APK
         run: |
           buildozer android debug
 
- - name: Upload APK
-  run: |
-    mkdir -p artifact
-    cp bin/*.apk artifact/
-- uses: actions/upload-artifact@v2
-  with:
-    name: guess-the-flag-apk
-    path: artifact/
+      - name: Prepare APK for upload
+        run: |
+          mkdir -p artifact
+          cp bin/*.apk artifact/
+          tar -czf artifact.tar.gz -C artifact .
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: guess-the-flag-apk
+          path: artifact.tar.gz
