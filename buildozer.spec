@@ -1,6 +1,6 @@
 [app]
-title = MyGame
-package.name = mygame
+title = Guess The Flag
+package.name = guess_the_flag
 package.domain = org.test
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
