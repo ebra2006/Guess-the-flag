@@ -29,10 +29,15 @@ jobs:
         run: |
           if [ ! -f buildozer.spec ]; then buildozer init; fi
 
+      - name: Check buildozer version
+        run: |
+          buildozer --version  # تحقق من أن buildozer يعمل بشكل صحيح
+
       - name: Build APK
         run: |
-          buildozer android debug
-        continue-on-error: true # لن يتوقف عند الخطأ حتى نتمكن من رؤية أي مشاكل
+          echo "Building APK using Buildozer"
+          buildozer android debug -v  # إضافة -v لعرض تفاصيل البناء
+        continue-on-error: true # التأكد من أن العمل يستمر حتى لو حدث خطأ
 
       - name: Check APK file existence
         run: |
