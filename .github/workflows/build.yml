@@ -32,21 +32,25 @@ jobs:
       - name: Build APK
         run: |
           buildozer android debug
+        continue-on-error: true # لن يتوقف عند الخطأ حتى نتمكن من رؤية أي مشاكل
 
       - name: Check APK file existence
         run: |
-          ls -lh bin/   # نتحقق إذا كان الـ APK موجود في مجلد bin
+          echo "Checking if APK file exists in bin/"
+          ls -lh bin/  # تحقق من وجود ملفات الـ APK في المسار bin/
 
       - name: Prepare APK for upload
         run: |
           mkdir -p artifact
-          cp bin/*.apk artifact/    # نقوم بنقل الـ APK إلى مجلد artifact
-          ls -lh artifact/          # تحقق من محتويات المجلد artifact
+          cp bin/*.apk artifact/    # نقل ملفات APK إلى مجلد artifact
+          echo "Files in artifact folder:"
+          ls -lh artifact/           # تحقق من وجود ملفات الـ APK في مجلد artifact
 
       - name: Create archive
         run: |
-          tar -czf artifact.tar.gz -C artifact .
-          ls -lh artifact.tar.gz  # تحقق من وجود الأرشيف artifact.tar.gz
+          echo "Creating archive for APK files"
+          tar -czf artifact.tar.gz -C artifact .   # إنشاء الأرشيف
+          ls -lh artifact.tar.gz                  # تحقق من وجود الأرشيف
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
