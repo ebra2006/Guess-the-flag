@@ -34,18 +34,18 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
 
-    # Install Java 17 (JDK 17) for Buildozer
+    # تثبيت Java JDK 17
     - name: Setup Java JDK 17
       uses: actions/setup-java@v4.2.1
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # Install required dependencies for Buildozer
+    # تثبيت Buildozer باستخدام pip
     - name: Install Buildozer and dependencies
       run: |
         sudo apt update
-        sudo apt install -y buildozer git zip unzip openjdk-17-jdk
+        sudo apt install -y git zip unzip openjdk-17-jdk
         pip install --upgrade pip
         pip install Cython
         pip install buildozer
